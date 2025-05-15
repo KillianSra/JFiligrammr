@@ -1,9 +1,14 @@
 package io.github.killiansra.jfiligrammr.controller;
 
 import io.github.killiansra.jfiligrammr.util.FileUtil;
-import javafx.application.Platform;
+import io.github.killiansra.jfiligrammr.util.PdfUtil;
+import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Dragboard;
@@ -19,10 +24,9 @@ import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 import java.util.ResourceBundle;
 
-import static io.github.killiansra.jfiligrammr.config.AppConstants.UPLOAD_DIR_NAME;
-import static io.github.killiansra.jfiligrammr.config.AppConstants.VALID_EXTENSION;
+import static io.github.killiansra.jfiligrammr.config.AppConstants.*;
 
-public class MainController implements Initializable
+public class MainController extends BaseController implements Initializable
 {
     @FXML
     public BorderPane rootPane;
@@ -30,6 +34,9 @@ public class MainController implements Initializable
     @FXML
     public ImageView dropTarget;
 
+    private Stage stage;
+    private Scene scene;
+    private Parent root;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle)
@@ -38,13 +45,7 @@ public class MainController implements Initializable
         FileUtil.cleanUpUploadsDirectory();
 
         //Drag the window across the screen
-        this.rootPane.setOnMousePressed(pressEvent -> {
-            this.rootPane.setOnMouseDragged(dragEvent -> {
-                Stage stage = (Stage) this.rootPane.getScene().getWindow();
-                stage.setX(dragEvent.getScreenX() - pressEvent.getSceneX());
-                stage.setY(dragEvent.getScreenY() - pressEvent.getSceneY());
-            });
-        });
+        super.enableWindowDrag(this.rootPane);
 
         //Drag PDF file into the ImageView
         this.dropTarget.setOnDragOver(event -> {
@@ -78,6 +79,7 @@ public class MainController implements Initializable
                 try
                 {
                     Files.copy(droppedFile.toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    PdfUtil.setFilename(droppedFile.getName());
                 }
                 catch(IOException e)
                 {
@@ -89,27 +91,45 @@ public class MainController implements Initializable
                 }
 
                 event.setDropCompleted(true);
+
+                try
+                {
+                    //Shows the next scene
+                    changeScene(event);
+                }
+                catch (IOException e)
+                {
+                    throw new RuntimeException(e);
+                }
             }
         });
     }
 
     /**
-     * Closes the application by terminating the JavaFX platform.
+     * Minimizes the application window.
      */
-    public void close()
+    public void reduceWindow()
     {
-        //Delete the uploaded PDF file
-        FileUtil.cleanUpUploadsDirectory();
-
-        Platform.exit();
+        super.reduce(this.rootPane);
     }
 
     /**
-     * Minimizes the application window.
+     * Loads the edit view from an FXML file and switches the current scene to it.
+     *
+     * @param e the event that triggered the scene change
+     * @throws IOException if the FXML file cannot be loaded
      */
-    public void reduce()
+    private void changeScene(Event e) throws IOException
     {
-        Stage stage = (Stage) this.rootPane.getScene().getWindow();
-        stage.setIconified(true);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(RESOURCE_BASE_PATH + "view/edit.fxml"));
+
+        this.root = loader.load();
+
+        EditController editController = loader.getController();
+
+        this.stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
+        this.scene = new Scene(root);
+        this.stage.setScene(scene);
+        this.stage.show();
     }
 }
