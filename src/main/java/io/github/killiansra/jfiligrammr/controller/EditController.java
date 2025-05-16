@@ -5,6 +5,7 @@ import io.github.killiansra.jfiligrammr.util.PdfUtil;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
@@ -12,6 +13,7 @@ import javafx.scene.layout.BorderPane;
 
 import java.awt.image.BufferedImage;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -34,6 +36,9 @@ public class EditController extends BaseController implements Initializable
 
     @FXML
     public TextField watermark;
+
+    @FXML
+    public ChoiceBox<Integer> fontSizes;
 
     private List<BufferedImage> pdfPages;
     private List<BufferedImage> watermarkedPages;
@@ -59,6 +64,14 @@ public class EditController extends BaseController implements Initializable
             this.rightArrow.setVisible(false);
             this.leftArrow.setVisible(false);
         }
+
+        //Fill Choice box
+        int[] sizes = {18, 24, 30, 36, 42, 48, 54, 60, 66, 72, 78, 84, 90, 96, 102, 108};
+        this.fontSizes.getItems().addAll(Arrays.stream(sizes).boxed().toArray(Integer[]::new));
+        //Select a default size
+        this.fontSizes.getSelectionModel().select(8);
+        //Add listener to reload preview when font size is updated
+        this.fontSizes.setOnAction(e -> setWatermark());
     }
 
     /**
@@ -116,7 +129,7 @@ public class EditController extends BaseController implements Initializable
         //Applies the watermark to all pages
         for(int i = 0; i < this.watermarkedPages.size(); i++)
         {
-            this.watermarkedPages.set(i, PdfUtil.addTextOnImage(this.watermarkedPages.get(i), this.watermark.getText()));
+            this.watermarkedPages.set(i, PdfUtil.addTextOnImage(this.watermarkedPages.get(i), this.watermark.getText(), this.fontSizes.getSelectionModel().getSelectedItem()));
         }
 
         reloadImageView();
