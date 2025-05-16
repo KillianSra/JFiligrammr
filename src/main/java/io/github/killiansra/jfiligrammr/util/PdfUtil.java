@@ -1,12 +1,14 @@
 package io.github.killiansra.jfiligrammr.util;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.killiansra.jfiligrammr.util.enums.Orientation;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.rendering.PDFRenderer;
@@ -66,17 +68,34 @@ public class PdfUtil
      * @param image the {@link BufferedImage} to which the text will be added.
      * @param text the text string to draw on the image.
      * @param fontSize the font size of the watermark.
+     * @param orientation the orientation of the watermark
      * @return the modified {@link BufferedImage} with the text watermark
      */
-    public static BufferedImage addTextOnImage(BufferedImage image, String text, int fontSize)
+    public static BufferedImage addTextOnImage(BufferedImage image, String text, int fontSize, Orientation orientation)
     {
         Graphics2D g2 = image.createGraphics();
 
         //Text settings
         Font font = new Font("Arial", Font.BOLD, fontSize);
-        g2.setFont(font);
         g2.setPaint(Color.BLACK);
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.2f));
+
+        //Text orientation
+        AffineTransform transform = new AffineTransform();
+        switch (orientation)
+        {
+            case Orientation.VERTICAL:
+                transform.rotate(Math.PI / 2, image.getWidth() / 2.0, image.getHeight() / 2.0);
+                break;
+            case Orientation.DIAGONAL:
+                transform.rotate(Math.toRadians(-55), image.getWidth() / 2.0, image.getHeight() / 2.0);
+                break;
+            default: //HORIZONTAL
+                break;
+        }
+
+        g2.setTransform(transform);
+        g2.setFont(font);
 
         //Center text horizontally and vertically
         FontMetrics metrics = g2.getFontMetrics(font);

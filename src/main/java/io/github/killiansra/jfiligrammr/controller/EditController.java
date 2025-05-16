@@ -2,12 +2,11 @@ package io.github.killiansra.jfiligrammr.controller;
 
 import io.github.killiansra.jfiligrammr.util.ImageUtil;
 import io.github.killiansra.jfiligrammr.util.PdfUtil;
+import io.github.killiansra.jfiligrammr.util.enums.Orientation;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 
@@ -39,6 +38,9 @@ public class EditController extends BaseController implements Initializable
 
     @FXML
     public ChoiceBox<Integer> fontSizes;
+
+    @FXML
+    public RadioButton radioHorizontal, radioVertical, radioDiagonal;
 
     private List<BufferedImage> pdfPages;
     private List<BufferedImage> watermarkedPages;
@@ -72,6 +74,12 @@ public class EditController extends BaseController implements Initializable
         this.fontSizes.getSelectionModel().select(8);
         //Add listener to reload preview when font size is updated
         this.fontSizes.setOnAction(e -> setWatermark());
+
+        //Group the radio buttons together
+        ToggleGroup toggleGroup = new ToggleGroup();
+        radioHorizontal.setToggleGroup(toggleGroup);
+        radioVertical.setToggleGroup(toggleGroup);
+        radioDiagonal.setToggleGroup(toggleGroup);
     }
 
     /**
@@ -129,10 +137,36 @@ public class EditController extends BaseController implements Initializable
         //Applies the watermark to all pages
         for(int i = 0; i < this.watermarkedPages.size(); i++)
         {
-            this.watermarkedPages.set(i, PdfUtil.addTextOnImage(this.watermarkedPages.get(i), this.watermark.getText(), this.fontSizes.getSelectionModel().getSelectedItem()));
+            this.watermarkedPages.set(i, PdfUtil.addTextOnImage(this.watermarkedPages.get(i), this.watermark.getText(),
+                    this.fontSizes.getSelectionModel().getSelectedItem(), getOrientation()));
         }
 
         reloadImageView();
+    }
+
+    /**
+     * Returns the currently selected orientation
+     *
+     * @return the selected {@link Orientation}
+     */
+    private Orientation getOrientation()
+    {
+        Orientation orientation = null;
+
+        if(radioHorizontal.isSelected())
+        {
+            orientation = Orientation.HORIZONTAL;
+        }
+        else if(radioVertical.isSelected())
+        {
+            orientation = Orientation.VERTICAL;
+        }
+        else if(radioDiagonal.isSelected())
+        {
+            orientation = Orientation.DIAGONAL;
+        }
+
+        return orientation;
     }
 
     /**
