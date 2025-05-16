@@ -64,16 +64,19 @@
    <left>
       <AnchorPane prefHeight="407.0" prefWidth="339.0" BorderPane.alignment="CENTER">
          <children>
-            <TextField fx:id="watermark" layoutX="95.0" layoutY="122.0" onKeyReleased="#setWatermark" prefHeight="35.0" prefWidth="214.0" style="-fx-background-radius: 6; -fx-border-color: #252525; -fx-background-radius: 6; -fx-padding: 8 12;" />
-            <Label layoutX="95.0" layoutY="105.0" text="Watermark" textFill="#b4b4b4" />
+            <TextField fx:id="watermark" layoutX="96.0" layoutY="94.0" onKeyReleased="#setWatermark" prefHeight="35.0" prefWidth="214.0" style="-fx-background-radius: 6; -fx-border-color: #252525; -fx-background-radius: 6; -fx-padding: 8 12;" />
+            <Label layoutX="96.0" layoutY="77.0" text="Watermark" textFill="#b4b4b4" />
             <Button fx:id="cancelButton" layoutX="95.0" layoutY="332.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="75.0" style="-fx-border-color: #C26F6A; -fx-background-insets: 2; -fx-background-color: #F4A29E; -fx-border-width: 2; -fx-background-insets: 0; -fx-cursor: hand;" text="Cancel" />
             <Button fx:id="DownloadButton" layoutX="234.0" layoutY="332.0" mnemonicParsing="false" style="-fx-border-color: #6FAF6B; -fx-background-insets: 2; -fx-background-color: #B6E2B1; -fx-border-width: 2; -fx-background-insets: 0; -fx-cursor: hand;" text="Download" />
-            <ChoiceBox fx:id="fontSizes" layoutX="95.0" layoutY="186.0" prefHeight="35.0" prefWidth="214.0" style="-fx-background-radius: 6; -fx-padding: 4 12; -fx-background-color: #FFFFFF;" />
-            <Label layoutX="95.0" layoutY="169.0" text="Font size" textFill="#b4b4b4" />
-            <RadioButton fx:id="radioHorizontal" layoutX="95.0" layoutY="252.0" mnemonicParsing="false" onAction="#setWatermark" selected="true" text="Horizontal" textFill="#b4b4b4" />
-            <RadioButton fx:id="radioVertical" layoutX="186.0" layoutY="252.0" mnemonicParsing="false" onAction="#setWatermark" text="Vertical" textFill="#b4b4b4" />
-            <RadioButton fx:id="radioDiagonal" layoutX="261.0" layoutY="252.0" mnemonicParsing="false" onAction="#setWatermark" text="Diagonal" textFill="#b4b4b4" />
-            <Label layoutX="94.0" layoutY="229.0" text="Orientation" textFill="#b4b4b4" />
+            <ChoiceBox fx:id="fontSizes" layoutX="96.0" layoutY="158.0" prefHeight="35.0" prefWidth="214.0" style="-fx-background-radius: 6; -fx-padding: 4 12; -fx-background-color: #FFFFFF;" />
+            <Label layoutX="96.0" layoutY="141.0" text="Font size" textFill="#b4b4b4" />
+            <RadioButton fx:id="radioHorizontal" layoutX="96.0" layoutY="224.0" mnemonicParsing="false" onAction="#setWatermark" selected="true" text="Horizontal" textFill="#b4b4b4" />
+            <RadioButton fx:id="radioVertical" layoutX="187.0" layoutY="224.0" mnemonicParsing="false" onAction="#setWatermark" text="Vertical" textFill="#b4b4b4" />
+            <RadioButton fx:id="radioDiagonal" layoutX="262.0" layoutY="224.0" mnemonicParsing="false" onAction="#setWatermark" text="Diagonal" textFill="#b4b4b4" />
+            <Label layoutX="95.0" layoutY="201.0" text="Orientation" textFill="#b4b4b4" />
+            <Label layoutX="95.0" layoutY="254.0" text="Apply to" textFill="#b4b4b4" />
+            <RadioButton fx:id="radioAllPages" layoutX="96.0" layoutY="279.0" mnemonicParsing="false" onAction="#setWatermark" selected="true" text="All pages" textFill="#b4b4b4" />
+            <RadioButton fx:id="radioFirstPage" layoutX="187.0" layoutY="279.0" mnemonicParsing="false" onAction="#setWatermark" text="First page only" textFill="#b4b4b4" />
          </children>
       </AnchorPane>
    </left>

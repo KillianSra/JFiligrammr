@@ -3,6 +3,7 @@ package io.github.killiansra.jfiligrammr.controller;
 import io.github.killiansra.jfiligrammr.util.ImageUtil;
 import io.github.killiansra.jfiligrammr.util.PdfUtil;
 import io.github.killiansra.jfiligrammr.util.enums.Orientation;
+import io.github.killiansra.jfiligrammr.util.enums.Scope;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -40,7 +41,7 @@ public class EditController extends BaseController implements Initializable
     public ChoiceBox<Integer> fontSizes;
 
     @FXML
-    public RadioButton radioHorizontal, radioVertical, radioDiagonal;
+    public RadioButton radioHorizontal, radioVertical, radioDiagonal, radioAllPages, radioFirstPage;
 
     private List<BufferedImage> pdfPages;
     private List<BufferedImage> watermarkedPages;
@@ -76,10 +77,14 @@ public class EditController extends BaseController implements Initializable
         this.fontSizes.setOnAction(e -> setWatermark());
 
         //Group the radio buttons together
-        ToggleGroup toggleGroup = new ToggleGroup();
-        radioHorizontal.setToggleGroup(toggleGroup);
-        radioVertical.setToggleGroup(toggleGroup);
-        radioDiagonal.setToggleGroup(toggleGroup);
+        ToggleGroup orientationGroup = new ToggleGroup();
+        this.radioHorizontal.setToggleGroup(orientationGroup);
+        this.radioVertical.setToggleGroup(orientationGroup);
+        this.radioDiagonal.setToggleGroup(orientationGroup);
+
+        ToggleGroup applyToGroup = new ToggleGroup();
+        this.radioAllPages.setToggleGroup(applyToGroup);
+        this.radioFirstPage.setToggleGroup(applyToGroup);
     }
 
     /**
@@ -126,7 +131,7 @@ public class EditController extends BaseController implements Initializable
     }
 
     /**
-     * Applies a watermark to all pages in the PDF.
+     * Applies a watermark to one page or all pages in the PDF.
      */
     @FXML
     public void setWatermark()
@@ -134,8 +139,14 @@ public class EditController extends BaseController implements Initializable
         //Reset the watermarkedPages list
         this.watermarkedPages = ImageUtil.cloneList(this.pdfPages);
 
-        //Applies the watermark to all pages
-        for(int i = 0; i < this.watermarkedPages.size(); i++)
+        int limit = 1;
+        if(getScope() == Scope.ALL_PAGES)
+        {
+            //Applies the watermark to all pages
+            limit = this.watermarkedPages.size();
+        }
+
+        for(int i = 0; i < limit; i++)
         {
             this.watermarkedPages.set(i, PdfUtil.addTextOnImage(this.watermarkedPages.get(i), this.watermark.getText(),
                     this.fontSizes.getSelectionModel().getSelectedItem(), getOrientation()));
@@ -145,13 +156,13 @@ public class EditController extends BaseController implements Initializable
     }
 
     /**
-     * Returns the currently selected orientation
+     * Returns the currently selected orientation.
      *
-     * @return the selected {@link Orientation}
+     * @return the selected {@link Orientation}.
      */
     private Orientation getOrientation()
     {
-        Orientation orientation = null;
+        Orientation orientation = Orientation.DIAGONAL;
 
         if(radioHorizontal.isSelected())
         {
@@ -161,12 +172,25 @@ public class EditController extends BaseController implements Initializable
         {
             orientation = Orientation.VERTICAL;
         }
-        else if(radioDiagonal.isSelected())
-        {
-            orientation = Orientation.DIAGONAL;
-        }
 
         return orientation;
+    }
+
+    /**
+     * Returns the currently selected scope.
+     *
+     * @return the selected {@link Scope}.
+     */
+    private Scope getScope()
+    {
+        Scope scope = Scope.FIRST_PAGE_ONLY;
+
+        if(radioAllPages.isSelected())
+        {
+            scope = Scope.ALL_PAGES;
+        }
+
+        return scope;
     }
 
     /**
