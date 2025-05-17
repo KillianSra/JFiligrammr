@@ -66,8 +66,8 @@
          <children>
             <TextField fx:id="watermark" layoutX="96.0" layoutY="94.0" onKeyReleased="#setWatermark" prefHeight="35.0" prefWidth="214.0" style="-fx-background-radius: 6; -fx-border-color: #252525; -fx-background-radius: 6; -fx-padding: 8 12;" />
             <Label layoutX="96.0" layoutY="77.0" text="Watermark" textFill="#b4b4b4" />
-            <Button fx:id="cancelButton" layoutX="95.0" layoutY="332.0" mnemonicParsing="false" prefHeight="29.0" prefWidth="75.0" style="-fx-border-color: #C26F6A; -fx-background-insets: 2; -fx-background-color: #F4A29E; -fx-border-width: 2; -fx-background-insets: 0; -fx-cursor: hand;" text="Cancel" />
-            <Button fx:id="DownloadButton" layoutX="234.0" layoutY="332.0" mnemonicParsing="false" style="-fx-border-color: #6FAF6B; -fx-background-insets: 2; -fx-background-color: #B6E2B1; -fx-border-width: 2; -fx-background-insets: 0; -fx-cursor: hand;" text="Download" />
+            <Button fx:id="cancelButton" layoutX="95.0" layoutY="332.0" mnemonicParsing="false" onAction="#backToMainMenu" prefHeight="29.0" prefWidth="75.0" style="-fx-border-color: #C26F6A; -fx-background-insets: 2; -fx-background-color: #F4A29E; -fx-border-width: 2; -fx-background-insets: 0; -fx-cursor: hand;" text="Cancel" />
+            <Button fx:id="DownloadButton" layoutX="234.0" layoutY="332.0" mnemonicParsing="false" onAction="#download" style="-fx-border-color: #6FAF6B; -fx-background-insets: 2; -fx-background-color: #B6E2B1; -fx-border-width: 2; -fx-background-insets: 0; -fx-cursor: hand;" text="Download" />
             <ChoiceBox fx:id="fontSizes" layoutX="96.0" layoutY="158.0" prefHeight="35.0" prefWidth="214.0" style="-fx-background-radius: 6; -fx-padding: 4 12; -fx-background-color: #FFFFFF;" />
             <Label layoutX="96.0" layoutY="141.0" text="Font size" textFill="#b4b4b4" />
             <RadioButton fx:id="radioHorizontal" layoutX="96.0" layoutY="224.0" mnemonicParsing="false" onAction="#setWatermark" selected="true" text="Horizontal" textFill="#b4b4b4" />

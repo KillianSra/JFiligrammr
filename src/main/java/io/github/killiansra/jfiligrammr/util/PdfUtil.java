@@ -9,11 +9,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.killiansra.jfiligrammr.util.enums.Orientation;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.rendering.PDFRenderer;
 
-import static io.github.killiansra.jfiligrammr.config.AppConstants.UPLOAD_DIR_NAME;
+import static io.github.killiansra.jfiligrammr.config.AppConstants.*;
 
 public class PdfUtil
 {
@@ -49,7 +56,7 @@ public class PdfUtil
             //Render each page of the PDF as a BufferedImage
             for(int i = 0; i < document.getNumberOfPages(); i++)
             {
-                images.add(renderer.renderImage(i));
+                images.add(renderer.renderImageWithDPI(i, DPI));
             }
 
             document.close();
@@ -73,6 +80,9 @@ public class PdfUtil
      */
     public static BufferedImage addTextOnImage(BufferedImage image, String text, int fontSize, Orientation orientation)
     {
+        //adjusts the font size
+        fontSize *= SCALE;
+
         Graphics2D g2 = image.createGraphics();
 
         //Text settings
@@ -108,5 +118,60 @@ public class PdfUtil
         g2.dispose();
 
         return image;
+    }
+
+    /**
+     * Converts a list of BufferedImages into a single PDF document.
+     *
+     * @param images the list of BufferedImages to include in the PDF.
+     * @param stage current window.
+     * @throws RuntimeException if an I/O error occurs during PDF creation.
+     */
+    public static boolean convertImagesToPdf(List<BufferedImage> images, Stage stage)
+    {
+        try(PDDocument document = new PDDocument();)
+        {
+            for(BufferedImage image : images)
+            {
+                //Conversion of pixels to points (1 point = 1/72 inch)
+                float width = image.getWidth() * 72f / DPI;
+                float height = image.getHeight() * 72f / DPI;
+
+                //Create a new PDF page with the same dimensions as the original file
+                PDPage page = new PDPage(new PDRectangle(width, height));
+                document.addPage(page);
+
+                //Convert the BufferedImage into a PDFBox image object
+                PDImageXObject pdImage = LosslessFactory.createFromImage(document, image);
+                try (PDPageContentStream contentStream = new PDPageContentStream(document, page))
+                {
+                    contentStream.drawImage(pdImage, 0, 0, width, height);
+                }
+            }
+
+            //saving the file to the user's computer
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("JFiligrammr - Save your watermarked PDF file");
+            //Default name
+            fileChooser.setInitialFileName(filename);
+
+            //Extension
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf"));
+
+            File output = fileChooser.showSaveDialog(stage);
+
+            boolean cancelled = true;
+            if(output != null)
+            {
+                document.save(output);
+                cancelled = false;
+            }
+
+            return cancelled;
+        }
+        catch(IOException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 }

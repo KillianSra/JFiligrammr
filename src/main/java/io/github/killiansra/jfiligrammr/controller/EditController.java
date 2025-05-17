@@ -1,21 +1,29 @@
 package io.github.killiansra.jfiligrammr.controller;
 
+import io.github.killiansra.jfiligrammr.util.FileUtil;
 import io.github.killiansra.jfiligrammr.util.ImageUtil;
 import io.github.killiansra.jfiligrammr.util.PdfUtil;
 import io.github.killiansra.jfiligrammr.util.enums.Orientation;
 import io.github.killiansra.jfiligrammr.util.enums.Scope;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
+
+import static io.github.killiansra.jfiligrammr.config.AppConstants.RESOURCE_BASE_PATH;
 
 public class EditController extends BaseController implements Initializable
 {
@@ -46,6 +54,10 @@ public class EditController extends BaseController implements Initializable
     private List<BufferedImage> pdfPages;
     private List<BufferedImage> watermarkedPages;
     private int currentPageIndex = 0;
+
+    private Stage stage;
+    private Scene scene;
+    private Parent root;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle)
@@ -199,5 +211,44 @@ public class EditController extends BaseController implements Initializable
     private void reloadImageView()
     {
         this.pageViewer.setImage(SwingFXUtils.toFXImage(this.watermarkedPages.get(currentPageIndex), null));
+    }
+
+    /**
+     * Returns the user to the application's main menu.
+     *
+     * @throws IOException if the main view FXML file cannot be loaded.
+     */
+    @FXML
+    public void backToMainMenu() throws IOException
+    {
+        //Deletes pdf files if there are any in the uploads folder
+        FileUtil.cleanUpUploadsDirectory();
+
+        //return to main menu
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(RESOURCE_BASE_PATH + "view/main.fxml"));
+
+        this.root = loader.load();
+
+        MainController mainController = loader.getController();
+
+        this.stage = (Stage) this.rootPane.getScene().getWindow();
+        this.scene = new Scene(root);
+        this.stage.setScene(scene);
+        this.stage.show();
+    }
+
+    /**
+     * Opens a save dialog to export the watermarked PDF.
+     *
+     * @throws IOException if the main view FXML file cannot be loaded.
+     */
+    @FXML
+    public void download() throws IOException
+    {
+        boolean cancelled = PdfUtil.convertImagesToPdf(this.watermarkedPages, (Stage) this.rootPane.getScene().getWindow());
+        if(!cancelled)
+        {
+            backToMainMenu();
+        }
     }
 }
