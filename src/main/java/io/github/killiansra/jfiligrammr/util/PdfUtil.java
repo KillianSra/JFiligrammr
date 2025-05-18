@@ -124,12 +124,13 @@ public class PdfUtil
      * Converts a list of BufferedImages into a single PDF document.
      *
      * @param images the list of BufferedImages to include in the PDF.
-     * @param stage current window.
      * @throws RuntimeException if an I/O error occurs during PDF creation.
      */
-    public static boolean convertImagesToPdf(List<BufferedImage> images, Stage stage)
+    public static PDDocument convertImagesToPdf(List<BufferedImage> images)
     {
-        try(PDDocument document = new PDDocument();)
+        PDDocument document = new PDDocument();
+
+        try
         {
             for(BufferedImage image : images)
             {
@@ -148,30 +149,12 @@ public class PdfUtil
                     contentStream.drawImage(pdImage, 0, 0, width, height);
                 }
             }
-
-            //saving the file to the user's computer
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("JFiligrammr - Save your watermarked PDF file");
-            //Default name
-            fileChooser.setInitialFileName(filename);
-
-            //Extension
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf"));
-
-            File output = fileChooser.showSaveDialog(stage);
-
-            boolean cancelled = true;
-            if(output != null)
-            {
-                document.save(output);
-                cancelled = false;
-            }
-
-            return cancelled;
         }
         catch(IOException e)
         {
             throw new RuntimeException(e);
         }
+
+        return document;
     }
 }

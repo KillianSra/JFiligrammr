@@ -5,6 +5,7 @@ import io.github.killiansra.jfiligrammr.util.ImageUtil;
 import io.github.killiansra.jfiligrammr.util.PdfUtil;
 import io.github.killiansra.jfiligrammr.util.enums.Orientation;
 import io.github.killiansra.jfiligrammr.util.enums.Scope;
+import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,9 +15,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.apache.pdfbox.pdmodel.PDDocument;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
@@ -24,6 +28,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import static io.github.killiansra.jfiligrammr.config.AppConstants.RESOURCE_BASE_PATH;
+import static io.github.killiansra.jfiligrammr.util.PdfUtil.convertImagesToPdf;
 
 public class EditController extends BaseController implements Initializable
 {
@@ -49,7 +54,13 @@ public class EditController extends BaseController implements Initializable
     public ChoiceBox<Integer> fontSizes;
 
     @FXML
+    public ImageView loading;
+
+    @FXML
     public RadioButton radioHorizontal, radioVertical, radioDiagonal, radioAllPages, radioFirstPage;
+
+    @FXML
+    public Button cancelButton, downloadButton;
 
     private List<BufferedImage> pdfPages;
     private List<BufferedImage> watermarkedPages;
@@ -245,10 +256,75 @@ public class EditController extends BaseController implements Initializable
     @FXML
     public void download() throws IOException
     {
-        boolean cancelled = PdfUtil.convertImagesToPdf(this.watermarkedPages, (Stage) this.rootPane.getScene().getWindow());
-        if(!cancelled)
+        //Display the loading animation and disable buttons
+        this.loading.setVisible(true);
+        this.cancelButton.setDisable(true);
+        this.downloadButton.setDisable(true);
+
+        //Separate thread because this action can take several seconds
+        Task<PDDocument> exportTask = new Task<>()
         {
-            backToMainMenu();
-        }
+            @Override
+            protected PDDocument call() throws Exception
+            {
+                return convertImagesToPdf(watermarkedPages);
+            }
+        };
+
+        exportTask.setOnSucceeded(event -> {
+            //Handle success case
+            PDDocument document = exportTask.getValue();
+
+            try
+            {
+                //saving the file to the user's computer
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setTitle("JFiligrammr - Save your watermarked PDF file");
+                //Default name
+                fileChooser.setInitialFileName("watermarked_file.pdf");
+                //Extension
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF files (*.pdf)", "*.pdf"));
+                File output = fileChooser.showSaveDialog(stage);
+
+                if(output != null)
+                {
+                    document.save(output);
+                    document.close();
+                    backToMainMenu();
+                }
+                else
+                {
+                    //Reactivate buttons and hide loading if cancelled
+                    document.close();
+                    this.loading.setVisible(false);
+                    this.cancelButton.setDisable(false);
+                    this.downloadButton.setDisable(false);
+                }
+            }
+            catch (IOException e)
+            {
+                try
+                {
+                    document.close();
+                }
+                catch (IOException ex)
+                {
+                    throw new RuntimeException(ex);
+                }
+                throw new RuntimeException(e);
+            }
+        });
+
+        exportTask.setOnFailed(event -> {
+            //Handle failure case
+            loading.setVisible(false);
+            cancelButton.setDisable(false);
+            downloadButton.setDisable(false);
+            Throwable error = exportTask.getException();
+            error.printStackTrace();
+        });
+
+        //Start the background task
+        new Thread(exportTask).start();
     }
 }
