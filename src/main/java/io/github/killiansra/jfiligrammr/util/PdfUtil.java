@@ -9,14 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.killiansra.jfiligrammr.util.enums.Orientation;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
-import org.apache.pdfbox.pdmodel.graphics.image.LosslessFactory;
+import org.apache.pdfbox.pdmodel.graphics.image.JPEGFactory;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.rendering.PDFRenderer;
 
@@ -143,7 +141,7 @@ public class PdfUtil
                 document.addPage(page);
 
                 //Convert the BufferedImage into a PDFBox image object
-                PDImageXObject pdImage = LosslessFactory.createFromImage(document, image);
+                PDImageXObject pdImage = JPEGFactory.createFromImage(document, image, 0.6f);
                 try (PDPageContentStream contentStream = new PDPageContentStream(document, page))
                 {
                     contentStream.drawImage(pdImage, 0, 0, width, height);
