@@ -66,7 +66,7 @@ public class MainController extends BaseController implements Initializable
                 File droppedFile = event.getDragboard().getFiles().get(0);
 
                 //Upload directory
-                File dir = new File(System.getProperty("user.dir"), UPLOAD_DIR_NAME);
+                File dir = new File(UPLOAD_DIR_NAME);
 
                 //Creates the folder if it does not exist
                 if(!dir.exists())

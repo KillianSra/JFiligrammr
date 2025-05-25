@@ -30,7 +30,7 @@ public class FileUtil
      */
     public static void cleanUpUploadsDirectory()
     {
-        File dir = new File(System.getProperty("user.dir"), UPLOAD_DIR_NAME);
+        File dir = new File(UPLOAD_DIR_NAME);
         if(dir.exists() && dir.list().length > 0)
         {
             for(File file : dir.listFiles())
