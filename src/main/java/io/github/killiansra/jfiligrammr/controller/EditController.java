@@ -73,7 +73,7 @@ public class EditController extends BaseController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
-        enableWindowDrag(this.rootPane);
+        super.enableWindowDrag(this.rootPane);
 
         //Convert the loaded PDF into a list of image pages
         this.pdfPages = PdfUtil.convertPdfToImages();
@@ -206,14 +206,7 @@ public class EditController extends BaseController implements Initializable
      */
     private Scope getScope()
     {
-        Scope scope = Scope.FIRST_PAGE_ONLY;
-
-        if(radioAllPages.isSelected())
-        {
-            scope = Scope.ALL_PAGES;
-        }
-
-        return scope;
+        return this.radioAllPages.isSelected() ? Scope.ALL_PAGES : Scope.FIRST_PAGE_ONLY;
     }
 
     /**
@@ -239,8 +232,7 @@ public class EditController extends BaseController implements Initializable
         FXMLLoader loader = new FXMLLoader(getClass().getResource(RESOURCE_BASE_PATH + "view/main.fxml"));
 
         this.root = loader.load();
-
-        MainController mainController = loader.getController();
+        loader.getController();
 
         this.stage = (Stage) this.rootPane.getScene().getWindow();
         this.scene = new Scene(root);
@@ -251,10 +243,9 @@ public class EditController extends BaseController implements Initializable
     /**
      * Opens a save dialog to export the watermarked PDF.
      *
-     * @throws IOException if the main view FXML file cannot be loaded.
      */
     @FXML
-    public void download() throws IOException
+    public void download()
     {
         //Display the loading animation and disable buttons
         this.loading.setVisible(true);
@@ -265,7 +256,7 @@ public class EditController extends BaseController implements Initializable
         Task<PDDocument> exportTask = new Task<>()
         {
             @Override
-            protected PDDocument call() throws Exception
+            protected PDDocument call()
             {
                 return convertImagesToPdf(watermarkedPages);
             }

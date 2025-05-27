@@ -7,6 +7,9 @@ import java.util.List;
 
 public class ImageUtil
 {
+    //Private constructor to prevent accidental instantiation
+    private ImageUtil(){}
+
     /**
      * Creates a clone of the given {@link List} objects.
      *

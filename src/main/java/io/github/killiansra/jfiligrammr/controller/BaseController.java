@@ -7,6 +7,11 @@ import javafx.stage.Stage;
 
 public abstract class BaseController
 {
+    /**
+     * Enables window dragging functionality for an undecorated JavaFX window.
+     *
+     * @param root the window to attach the drag behavior to.
+     */
     public void enableWindowDrag(Node root)
     {
         root.setOnMousePressed(pressEvent -> {

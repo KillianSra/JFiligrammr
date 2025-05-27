@@ -108,6 +108,7 @@ public class MainController extends BaseController implements Initializable
     /**
      * Minimizes the application window.
      */
+    @FXML
     public void reduceWindow()
     {
         super.reduce(this.rootPane);
@@ -125,7 +126,7 @@ public class MainController extends BaseController implements Initializable
 
         this.root = loader.load();
 
-        EditController editController = loader.getController();
+        loader.getController();
 
         this.stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
         this.scene = new Scene(root);

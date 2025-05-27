@@ -6,6 +6,9 @@ import static io.github.killiansra.jfiligrammr.config.AppConstants.UPLOAD_DIR_NA
 
 public class FileUtil
 {
+    //Private constructor to prevent accidental instantiation
+    private FileUtil(){}
+
     /**
      * Returns the file extension from a given filename.
      *

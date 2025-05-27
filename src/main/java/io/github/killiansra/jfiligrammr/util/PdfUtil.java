@@ -24,6 +24,9 @@ public class PdfUtil
 {
     private static String filename;
 
+    //Private constructor to prevent accidental instantiation
+    private PdfUtil(){}
+
     /**
      * Sets the name of the PDF file to be used for conversion tu BufferedImage.
      *
