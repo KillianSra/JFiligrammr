@@ -1,11 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.killiansra.jfiligrammr.controller.MainController">
-   <children>
-      <Label layoutX="265.0" layoutY="94.0" text="Hello World !" />
-   </children>
-</AnchorPane>
+<BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #555555;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="io.github.killiansra.jfiligrammr.controller.MainController">
+   <top>
+      <BorderPane prefHeight="57.0" prefWidth="600.0" style="-fx-background-color: #353535;" BorderPane.alignment="CENTER">
+         <right>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <ImageView fx:id="closeButton" fitHeight="30.0" fitWidth="30.0" layoutX="156.0" layoutY="14.0" onMouseClicked="#close" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;">
+                     <image>
+                        <Image url="@../images/exit.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="reduceButton" fitHeight="30.0" fitWidth="30.0" layoutX="118.0" layoutY="14.0" onMouseClicked="#reduceWindow" pickOnBounds="true" preserveRatio="true" style="-fx-cursor: hand;">
+                     <image>
+                        <Image url="@../images/reduce.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </AnchorPane>
+         </right>
+         <left>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Label layoutX="21.0" layoutY="13.0" text="JFiligrammr" textFill="#b4b4b4">
+                     <font>
+                        <Font size="22.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="133.0" layoutY="28.0" text="v1.0.0" textFill="#b4b4b4">
+                     <font>
+                        <Font size="8.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+         </left>
+      </BorderPane>
+   </top>
+   <bottom>
+      <StackPane BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fx:id="dropTarget" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/dragdrop.png" />
+               </image>
+            </ImageView>
+         </children>
+         <padding>
+            <Insets bottom="25.0" />
+         </padding>
+      </StackPane>
+   </bottom>
+   <center>
+      <StackPane prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label prefHeight="34.0" text="Drop your PDF file" textFill="#b4b4b4">
+               <StackPane.margin>
+                  <Insets top="20.0" />
+               </StackPane.margin>
+            </Label>
+         </children>
+      </StackPane>
+   </center>
+</BorderPane>
