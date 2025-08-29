@@ -47,11 +47,16 @@ This is a known issue, and improvements are planned in future releases to optimi
 
 # How to run
 
-In the **Release** tab, you'll find an `.msi` file for Windows. Download it and follow the installation instructions 
-to set up the program on your computer.
+In the **Release** tab, you can find:
+- a `.msi` installer for **Windows**
+- a `.deb` package for **Linux** (Ubuntu, Debian, and derivatives)
+
+Download the appropriate file for your system and follow the installation instructions to set up the program on your computer.
 
 > Note : Windows Defender may flag the installer as suspicious due to the absence of a signed certificate. 
   However, you can safely proceed with the installation.
+> 
+> On **Linux**, some distributions may also display a warning for the same reason.
 
 If you are using a different operating system or prefer to compile and run the code yourself, please follow the 
 instructions below.
