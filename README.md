@@ -26,11 +26,11 @@ computer and no data ever leaves the program.
 
 ### Folder created
 
-When running *JFiligrammr*, the program automatically creates a folder in the user's home directory:
+When running *JFiligrammr*, the program automatically creates a folder in the user's configuration directory:
 
-- **Windows**: `C:\Users\YourName\JFiligrammr\`
-- **macOS**: `/Users/YourName/JFiligrammr/`
-- **Linux**: `/home/JFiligrammr/`
+- **Windows**: `C:\Users\<YourName>\AppData\Roaming\JFiligrammr`
+- **macOS**: `/Users/<YourName>/Library/Application Support/JFiligrammr/`
+- **Linux**: `/home/<YourName>/.config/JFiligrammr/`
 
 This folder temporarily stores the PDF file during watermark operations. It is automatically deleted when the operation 
 is completed or canceled.

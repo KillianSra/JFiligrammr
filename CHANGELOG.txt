@@ -1,0 +1,18 @@
+CHANGELOG
+
+##### Version 1.0.1 #####
+
+Improved cross-platform support for temporary files directories.
+
+- On Windows, temporary files are now stored in %APPDATA%\JFiligrammr.
+  (e.g., C:\Users\<YourName>\AppData\Roaming\JFiligrammr)
+
+- On macOS, temporary files are now stored in ~/Library/Application Support/JFiligrammr.
+  (e.g., /Users/<YourName>/Library/Application Support/JFiligrammr)
+
+- On Linux / Unix-like systems, the application now follows the XDG Base Directory specification.
+  If $XDG_CONFIG_HOME is set :
+    $XDG_CONFIG_HOME/JFiligrammr
+  Otherwise :
+    ~/.config/JFiligrammr
+  (e.g., /home/<YourName>/.config/JFiligrammr)
